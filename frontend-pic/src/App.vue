@@ -1,31 +1,72 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-    <router-link to="/login">About</router-link>
+    <router-link to="/login">Login</router-link>
+    <router-link to="/register">Register</router-link>
   </nav>
   <router-view/>
+  <div class="OuterDiv">
+    <FillDiv></FillDiv>
+
+    <div class="InnerDiv">
+      <FileUpload></FileUpload>
+      <FeedDiv></FeedDiv>
+    </div>
+    <UserCreds :pic_url="pic_url"></UserCreds>
+  </div>
+
 </template>
 
+
+<script>
+import FileUpload from './components/FileUpload.vue'
+import UserCreds from './components/UserCreds.vue'
+import FillDiv from './components/FillDiv.vue'
+import FeedDiv from './components/FeedDiv.vue'
+
+export default {
+  name: 'App',
+  components: {
+    FileUpload,
+    UserCreds,
+    FillDiv,
+    FeedDiv
+  },
+  data(){
+    return{ 
+      loggedIn: false,
+      username: null,
+      id: null,
+      pic_url: require("../test_data/logo.png"),
+
+    }
+  },
+  methods: {
+    onSignIn (user){
+      console.log(user)
+    }
+  }
+}
+
+</script>
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  margin: auto;
+  width: 60%;
+  background-color: black;
+  height: 50em;
+  display: flex;
+  border-top: 5px solid black;
+  border-left: 5px solid black;
+  border-right: 5px solid black;
 
-nav {
-  padding: 30px;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.OuterDiv{
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.InnerDiv{
+  width: 50%;
+  height: 100%;
 }
 </style>

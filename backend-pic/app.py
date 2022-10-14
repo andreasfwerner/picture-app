@@ -1,10 +1,14 @@
-from flask import Flask, jsonify, session, request
+from flask import Flask, jsonify, session, request, Response
 from flask_cors import CORS, cross_origin
 import sqlite3
 
-from sqlalchemy import false
+#DATABASE 
 
+#TABLE users(id, username, password, profile_pic)
 
+#TABLE posts(post_id, user_id, image, comment, likes)
+
+#TABLE test(id, image)
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -37,9 +41,7 @@ def login():
     
     #returns data, format [amout of users with username][0=id,1=username,2=password]
     rows = cur.fetchall()
-    
-    
-    
+    print(rows)
     response={
                 "loggedIn": False,
                 "id": None,
@@ -56,11 +58,56 @@ def login():
             }
     return jsonify(response)
 
+@app.route("/register", methods=["POST"])
+def register():
+    conn = db_connection()
+    cur = conn.cursor()
+    
+    data = request.get_json()
+
+    cur.execute("SELECT username FROM users")
+    users = cur.fetchall()
+    
+    response= {
+        "unique": False
+    }
+    
+    for user in users:
+        if user[0] == data["username"]:
+            return jsonify(response)
+    
+    cur.execute("INSERT INTO users VALUES(NULL,'{}','{}')".format(data["username"],data["password"]))
+    conn.commit()
+    
+    response["unique"]=True
+    
+    return jsonify(response)
+
+@app.route("/post_posts", methods=["POST"])
+def post_posts():
+    conn = db_connection()
+    cur = conn.cursor()
+    
+    file = request.files['image']
+
+    img = file.read()
+    
+    cur.execute("INSERT INTO test(id,image) VALUES(?,?)",(1,img))
+    
+    
+    conn.commit()
+    return jsonify({"response":True})
+    
+
+
+
 @app.route("/images")
 def images():
     conn = db_connection()
     
     return jsonify("ja")
+
+
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)

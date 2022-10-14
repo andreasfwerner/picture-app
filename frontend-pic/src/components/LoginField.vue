@@ -3,6 +3,7 @@
         <input type="text" v-model="input_username">
         <input type="password" v-model="input_password">
         <button @click="submitInput">Submit</button>
+
     </div>
   </template>
   
@@ -14,10 +15,7 @@
     data() {
         return{
             input_username: null,
-            input_password: null,
-            loggedIn: false,
-            username: null,
-            id: null
+            input_password: null
         }
 
     }
@@ -37,11 +35,15 @@
                 },
             })
             .then((res) => {
-                const user = res.data;
-                if(user.loggedIn){
-                    this.loggedIn = true,
-                    this.username = user.username,
-                    this.id = user.i
+                const userResponse = res.data;
+                if(userResponse.loggedIn){
+                    const user = {
+                        loggedIn : true,
+                        username : userResponse.username,
+                        id : userResponse.id
+                    }
+                    console.log(user)
+                    this.$emit('onSignIn',user)
                 }
             })
             .catch((error) =>{
