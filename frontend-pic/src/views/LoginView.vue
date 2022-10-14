@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <LoginDiv/>
+        <LoginDiv @onSignIn="signedIn" />
     </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
     name: 'LoginView',
     components: {
         LoginDiv
+    },
+    methods:{
+        signedIn(user){
+            this.$emit("signedIn",user);
+        }
     }
 }
 </script>

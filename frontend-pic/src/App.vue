@@ -1,17 +1,20 @@
 <template>
-  <nav>
-    <router-link to="/login">Login</router-link>
-    <router-link to="/register">Register</router-link>
+  <nav >
+    <router-link v-if="!loggedIn" to="/login">Login</router-link>
+    <router-link v-if="!loggedIn" to="/register">Register</router-link>
   </nav>
-  <router-view/>
-  <div class="OuterDiv">
+
+  <router-view v-if="!loggedIn" @signedIn="signedIn"/>
+
+
+  <div v-if="loggedIn" class="OuterDiv">
     <FillDiv></FillDiv>
 
     <div class="InnerDiv">
-      <FileUpload></FileUpload>
+      <FileUpload :id="id"></FileUpload>
       <FeedDiv></FeedDiv>
     </div>
-    <UserCreds :pic_url="pic_url"></UserCreds>
+    <UserCreds :pic_url="pic_url" :username="username" @signedOut="signOut"></UserCreds>
   </div>
 
 </template>
@@ -41,8 +44,16 @@ export default {
     }
   },
   methods: {
-    onSignIn (user){
-      console.log(user)
+    signedIn (user){
+      this.loggedIn = user.loggedIn;
+      this.username = user.username;
+      this.id = user.id;
+    },
+    signOut (state){
+      this.loggedIn = state; 
+      this.loggedIn = null;
+      this.username = null;
+      this.id = null;
     }
   }
 }

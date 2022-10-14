@@ -6,10 +6,10 @@
         </div>
         <div class="UserWrapper">
             <div class="UserName">
-                <h3>Vuesername</h3>
+                <h3>{{ username }}</h3>
             </div>
             <div class="UserLogout">
-                <button class="glow-on-hover">Logout</button>
+                <button class="glow-on-hover" @click="this.$emit('signedOut',false)">Logout</button>
                 <button class="glow-on-hover">Settings</button>
             </div>
         </div>
@@ -25,7 +25,8 @@
   export default {
     name: 'UserCreds',
     props:{
-      "pic_url":String
+      "pic_url":String,
+      "username":String
     },
     components: {
         ControlPanel

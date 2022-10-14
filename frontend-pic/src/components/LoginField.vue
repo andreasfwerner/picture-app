@@ -42,7 +42,6 @@
                         username : userResponse.username,
                         id : userResponse.id
                     }
-                    console.log(user)
                     this.$emit('onSignIn',user)
                 }
             })

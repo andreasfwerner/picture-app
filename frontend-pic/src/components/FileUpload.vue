@@ -9,6 +9,10 @@
             <input name="file" id="file" class="FileUploadInput inputfile" type="file" @change="onFileSelect" >
             <label for="file">SELECT IMAGE</label>
         </div>
+
+        <div class="DescriptionField">
+            <input type="text" v-model="description">
+        </div>
         <div class="FilePostButton">
           <button class="glow-on-hover" @click="onUpload">UPLOAD</button>
         </div>
@@ -22,10 +26,10 @@ import axios from 'axios'
     name: 'FileUpload',
     data(){
       return {
-        selectedFile: null
+        selectedFile: null,
+        description: null
       }
     }, props:{
-      "username":String,
       "id": Number
     },
     methods: {
@@ -34,13 +38,24 @@ import axios from 'axios'
       },
       onUpload(){
 
+        date = new Date().toISOString().split('T')[0]
+
         const fd = new FormData();
-        fd.append('image',this.selectedFile, this.selectedFile.name)
+        fd.append('image',this.selectedFile, this.selectedFile.name);
+        fd.append('id',this.id);
+        fd.append('date',date);
+        fd.append('description',this.description);
+        this.selectedFile = null;
+        this.description = null;
+        
         const path = "http://localhost:8080/post_posts"
+        
         axios.post(path,fd)
         .then(res => {
           console.log(res)
+
         })
+      
       }
     }
   }

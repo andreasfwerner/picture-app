@@ -6,10 +6,9 @@ import sqlite3
 
 #TABLE users(id, username, password, profile_pic)
 
-#TABLE posts(post_id, user_id, image, comment, likes)
+#posts(post_id INTEGER PRIMARY KEY NOT NULL, user_id INTEGER NOT NULL, image BLOB NOT NULL, description TEXT, likes INTEGER)
 
-#TABLE test(id, image)
-
+#comments(comment_id INTEGER PRIMARY KEY NOT NULL, user_id INTEGER NOT NULL, post_id INTEGER NOT NULL, comment TEXTR)
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -60,42 +59,65 @@ def login():
 
 @app.route("/register", methods=["POST"])
 def register():
+    #connect to database
     conn = db_connection()
     cur = conn.cursor()
-    
-    data = request.get_json()
 
+    #get username and password from the POST request
+    username = request.form['username']
+    password = request.form['password']
+
+    #get all usernames from the database
     cur.execute("SELECT username FROM users")
     users = cur.fetchall()
     
+    #make a response
     response= {
         "unique": False
     }
     
+    #check in username is unique
     for user in users:
-        if user[0] == data["username"]:
+        
+        #if username is not unique, return a response 
+        if user[0] == username:
             return jsonify(response)
     
-    cur.execute("INSERT INTO users VALUES(NULL,'{}','{}')".format(data["username"],data["password"]))
+    #get the image from the post request
+    file = request.files['image']
+    
+    #turn image into binary
+    img = file.read()
+    
+    #insert username, password and image into database. ID is generated automaticly
+    cur.execute("INSERT INTO users(username,password,profile_pic) VALUES(?,?,?)",(username,password, img))
     conn.commit()
     
+    #since username is unique change the response
     response["unique"]=True
     
+    #return the response
     return jsonify(response)
 
 @app.route("/post_posts", methods=["POST"])
 def post_posts():
+    #connect to database
     conn = db_connection()
     cur = conn.cursor()
-    
+        
+    #get picture, id, description form POST request
     file = request.files['image']
-
+    id = request.form['id']
+    description = request.form['description']
+    date = request.form['date']
+    #turn image into binary
     img = file.read()
     
-    cur.execute("INSERT INTO test(id,image) VALUES(?,?)",(1,img))
-    
-    
+    #insert user_id, image, description, amout of likes into posts
+    cur.execute("INSERT INTO posts(user_id,image,description,likes,date) VALUES(?,?,?,?,?)",(id,img,description,0,date))
     conn.commit()
+    
+    
     return jsonify({"response":True})
     
 
