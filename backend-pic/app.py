@@ -41,7 +41,6 @@ def login():
     
     #returns data, format [amout of users with username][0=id,1=username,2=password]
     rows = cur.fetchall()
-    print(rows)
     response={
                 "loggedIn": False,
                 "id": None,
@@ -91,7 +90,7 @@ def register():
     img = file.read()
     
     #insert username, password and image into database. ID is generated automaticly
-    cur.execute("INSERT INTO users(username,password,profile_pic) VALUES(?,?,?)",(username,password, img))
+    cur.execute("INSERT INTO users(username,password,profilepic) VALUES(?,?,?)",(username,password, img))
     conn.commit()
     
     #since username is unique change the response
