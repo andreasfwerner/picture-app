@@ -12,14 +12,14 @@
   export default {
     name: 'TestPicProp',
     
-    data(){
-        return{
-            src:null,
-        }
-    },
+    props:{
+        pic_src: String
+    }
+    ,
     methods:{
-        updateSrc(src){
-            this.$refs.image.src=src
+        updateSrc(){
+            console.log(this.pic_src)
+            this.$refs.image.src=this.pic_src
         }
     }
   }

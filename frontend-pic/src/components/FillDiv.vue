@@ -6,8 +6,8 @@
 
         </div>
         <div class="SvgDiv">
-          <a>
-            <img class="Heart" src="../../svg/heart.svg" />
+          <a @click="fillHeart">
+            <img class="Heart" ref="heart" :src="open_heart"/>
           </a>
         </div>
       </div>
@@ -17,6 +17,25 @@
   <script>
   export default {
     name: 'FillDiv',
+    data(){
+      return{
+        open_heart: require("../../svg/heart.svg"),
+        closed_heart: require("../../svg/heartfill.svg")
+
+      }
+    }
+    , 
+    methods:{
+      fillHeart(){
+        if(this.$refs.heart.src.split("/img")[1] == this.open_heart.split("/img")[1]){
+          this.$refs.heart.src = this.closed_heart
+        }
+        else{
+          this.$refs.heart.src = this.open_heart
+        }
+        
+      }
+    }
   }
   </script>
   
@@ -49,8 +68,7 @@
     height: 75%;
     background-color: black;
   }
-  Heart{
-    margin: auto;
-  }
+
+
   </style>
   

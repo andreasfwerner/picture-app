@@ -2,7 +2,7 @@
     <div class="Test">
         <button @click="getPicture()">Get Pic</button>
         <div class="pic">
-            <TestPicProp ref="childComponent"/>
+            <TestPicProp ref="childComponent" :pic_src="pic_src"/>
         </div>
     </div>
 
@@ -24,6 +24,13 @@ import TestPicProp from './TestPicProp.vue'
         TestPicProp
     }
     ,
+
+    data(){
+        return{
+            pic_src:null
+        }
+    }
+    ,
     methods:{
         getPicture(){
             const meta = {
@@ -36,7 +43,12 @@ import TestPicProp from './TestPicProp.vue'
             .then((res)=>{
                 
                 const src = `data:image/png;base64,${res.data}`                
-                this.$refs.childComponent.updateSrc(src);
+                this.pic_src = src
+                console.log(this.pic_src)
+                setTimeout(() => {
+                    this.$refs.childComponent.updateSrc();
+                },"500") 
+               
             })
             .catch((err)=>{
                 console.log(err)
@@ -54,10 +66,6 @@ import TestPicProp from './TestPicProp.vue'
         width: 400px;
         height: 400px;
         background-color: blue;
-    }
-    img{
-        width: 200px;
-        height: 200px;
     }
 </style>
   
