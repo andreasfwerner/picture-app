@@ -38,7 +38,7 @@ import axios from 'axios'
       },
       onUpload(){
 
-        date = new Date().toISOString().split('T')[0]
+        const date = new Date().toISOString().split('T')[0]
 
         const fd = new FormData();
         fd.append('image',this.selectedFile, this.selectedFile.name);

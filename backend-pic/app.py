@@ -1,6 +1,11 @@
-from flask import Flask, jsonify, session, request, Response
+from urllib import response
+from flask import Flask, jsonify, send_file, request, Response
 from flask_cors import CORS, cross_origin
 import sqlite3
+
+import io
+import PIL.Image as Image
+import base64
 
 #DATABASE 
 
@@ -25,10 +30,6 @@ def db_connection():
     return conn
 
 
-@app.route("/")
-def index():
-    return
-    
 @app.route("/login",methods=["POST"])
 def login():
     conn = db_connection()
@@ -121,6 +122,30 @@ def post_posts():
     return jsonify({"response":True})
     
 
+@app.route("/test", methods=["POST"])
+def test():
+    conn = db_connection()
+    cur = conn.cursor()
+
+    data = request.get_json()
+    
+    cur.execute("SELECT * FROM posts WHERE user_id={}".format(data.get("id")))
+    rows = cur.fetchall()
+    
+    
+    #row[0] = post_id, row[1] = user_id, row[2] = picture, 
+    pic_bin = None
+    for row in rows:
+         pic_bin = row[2]
+
+    pic = base64.b64encode(pic_bin)
+    
+    
+    return send_file(
+    io.BytesIO(pic),
+    mimetype='image/jpeg',
+    as_attachment=True,
+    download_name='image')
 
 
 @app.route("/images")
@@ -128,8 +153,6 @@ def images():
     conn = db_connection()
     
     return jsonify("ja")
-
-
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)

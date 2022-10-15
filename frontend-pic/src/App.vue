@@ -3,19 +3,20 @@
     <router-link v-if="!loggedIn" to="/login">Login</router-link>
     <router-link v-if="!loggedIn" to="/register">Register</router-link>
   </nav>
-
   <router-view v-if="!loggedIn" @signedIn="signedIn"/>
+  <TestDiv :user_id="1"/>
 
 
   <div v-if="loggedIn" class="OuterDiv">
-    <FillDiv></FillDiv>
+    <FillDiv/>
 
     <div class="InnerDiv">
-      <FileUpload :id="id"></FileUpload>
-      <FeedDiv></FeedDiv>
+      <FileUpload :id="id"/>
+      <FeedDiv/>
     </div>
-    <UserCreds :pic_url="pic_url" :username="username" @signedOut="signOut"></UserCreds>
+    <UserCreds :pic_url="pic_url" :username="username" @signedOut="signOut"/>
   </div>
+
 
 </template>
 
@@ -26,13 +27,19 @@ import UserCreds from './components/UserCreds.vue'
 import FillDiv from './components/FillDiv.vue'
 import FeedDiv from './components/FeedDiv.vue'
 
+
+// TEST
+import TestDiv from './components/TestPic.vue'
+
+
 export default {
   name: 'App',
   components: {
     FileUpload,
     UserCreds,
     FillDiv,
-    FeedDiv
+    FeedDiv,
+    TestDiv
   },
   data(){
     return{ 
