@@ -11,9 +11,9 @@ import base64
 
 #TABLE users(id, username, password, profile_pic)
 
-#posts(post_id INTEGER PRIMARY KEY NOT NULL, user_id INTEGER NOT NULL, image BLOB NOT NULL, description TEXT, likes INTEGER)
+#posts(post_id INTEGER PRIMARY KEY NOT NULL, user_id INTEGER NOT NULL, image BLOB NOT NULL, description TEXT, name TEXT)
 
-#comments(comment_id INTEGER PRIMARY KEY NOT NULL, user_id INTEGER NOT NULL, post_id INTEGER NOT NULL, comment TEXTR)
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -110,11 +110,13 @@ def post_posts():
     id = request.form['id']
     description = request.form['description']
     date = request.form['date']
+    name = request.form['name']
+    
     #turn image into binary
     img = file.read()
     
     #insert user_id, image, description, amout of likes into posts
-    cur.execute("INSERT INTO posts(user_id,image,description,likes,date) VALUES(?,?,?,?,?)",(id,img,description,0,date))
+    cur.execute("INSERT INTO posts(user_id,image,description,date,name) VALUES(?,?,?,?,?)",(id,img,description,date,name))
     conn.commit()
     
     
@@ -132,20 +134,25 @@ def test():
     rows = cur.fetchall()
     
     
-    #row[0] = post_id, row[1] = user_id, row[2] = picture, 
-    pic_bin = None
+    #row[0] = post_id, row[1] = user_id, row[2] = picture, row[3] = desc, row[4] = name
+    pic_list = []
+    name_list = []
+    desc_list = []
+    date_list = []
     for row in rows:
-         pic_bin = row[2]
-
-    pic = base64.b64encode(pic_bin)
-    
-    
-    return send_file(
-    io.BytesIO(pic),
-    mimetype='image/jpeg',
-    as_attachment=True,
-    download_name='image')
-
+        encoded_img = base64.encodebytes(row[2]).decode('ascii')
+        pic_list.append(encoded_img)
+        name_list.append(row[5])
+        date_list.append(row[4])
+        desc_list.append(row[3])
+        
+        
+    return jsonify({'pic_list':pic_list,
+                    'name_list':name_list,
+                    'date_list':date_list,
+                    'desc_list':desc_list
+                    }) 
+        
 
 @app.route("/images")
 def images():

@@ -1,33 +1,69 @@
 <template>
-    <div class="FeedDiv">
-        <FeedPicture :pic_url="pic_url"
-                    :username="username"
-                    :date_posted="todaysDate"
-                    :description="description"
-                    :username_pic="username_pic">
+    <div class="FeedDiv" v-for="pic,i in pics">
+        <FeedPicture ref="childComponent"
+                    :date_posted="dates[i]"
+                    :name="names[i]"
+                    :description="descs[i]"
+                    :pic_src="pic"
+                    >
         </FeedPicture>
-        <CommentDiv>
-          
-        </CommentDiv>
     </div>
 </template>
   
   <script>
   import FeedPicture from './FeedPicture.vue'
-  import CommentDiv from './CommentDiv.vue'
+  import axios from 'axios'
+
   export default {
     name: 'FeedDiv',
     components: {
         FeedPicture,
-        CommentDiv
     },
+    props:{
+      "user_id": Number
+    }
+    ,
     data(){
         return{
-            todaysDate: new Date().toISOString().split('T')[0],
-            description: "OMG what a nice picture",
-            username:"vuesername",
-            pic_url:require("../../test_data/logo.png"),
-            username_pic:require("../../test_data/logo.png")
+            pics:[],
+            names:[],
+            dates:[],
+            descs:[]
+        }
+        
+    },
+    methods:{
+        getPicture(){
+            const meta = {
+                id: this.user_id
+            }
+
+            const path = "http://localhost:8080/test"
+
+            axios.post(path,meta)
+            .then((res)=>{
+                console.log(res)
+                for(let i=0; i<res.data.pic_list.length;i++){
+                    const src = `data:image/png;base64,${res.data.pic_list[i]}`
+                    this.pics.push(src)
+                    this.descs.push(res.data.desc_list[i])
+                    this.names.push(res.data.name_list[i])
+                    this.dates.push(res.data.date_list[i])
+                }
+                setTimeout(() => {
+                    for(let i=0; i<this.pics.length;i++){
+                        this.$refs.childComponent[i].updateSrc();
+                        console.log(i)
+                    }
+                    
+                },"500") 
+               
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+
+
         }
     }
   }

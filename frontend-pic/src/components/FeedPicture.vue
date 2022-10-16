@@ -2,16 +2,13 @@
     <div class="PictureWrapper">
         <div class="TopDiv">
             <div class="PictureDiv">
-                <img class="FeedPic" :src="pic_url" alt="Description of image"/>
+                <img class="FeedPic" ref="image" alt="Description of image"/>
             </div>
             <div class="UserDiv">
                 <div class="UserPicDiv">
-                    <div class="CircleDiv">
-                        <img class="ProfilePic" :src="username_pic"/>
-                    </div>
                 </div>
                 <div class="UsernameDiv">
-                    <h3>{{username}}</h3>
+                    <h3>{{name}}</h3>
                 </div>
             </div>
         </div>
@@ -34,11 +31,16 @@
   export default {
     name: 'FeedPicture',
     props:{
-        "pic_url": String,
-        "description": String,
-        "date_posted": String,
-        "username":String,
-        "username_pic": String
+        description: String,
+        date_posted: String,
+        pic_src: String,
+        name: String
+    },
+    methods:{
+        updateSrc(){
+            console.log(this.pic_src)
+            this.$refs.image.src=this.pic_src
+        }
     }
 
 

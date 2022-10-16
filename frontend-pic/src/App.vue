@@ -4,15 +4,13 @@
     <router-link v-if="!loggedIn" to="/register">Register</router-link>
   </nav>
   <router-view v-if="!loggedIn" @signedIn="signedIn"/>
-  <TestDiv :user_id="1"/>
-
 
   <div v-if="loggedIn" class="OuterDiv">
     <FillDiv/>
 
     <div class="InnerDiv">
       <FileUpload :id="id"/>
-      <FeedDiv/>
+      <FeedDiv ref="feed" :user_id="id"/>
     </div>
     <UserCreds :pic_url="pic_url" :username="username" @signedOut="signOut"/>
   </div>
@@ -55,6 +53,10 @@ export default {
       this.loggedIn = user.loggedIn;
       this.username = user.username;
       this.id = user.id;
+
+      setTimeout(() => {    
+        this.$refs.feed.getPicture();  
+        },"500")
     },
     signOut (state){
       this.loggedIn = state; 

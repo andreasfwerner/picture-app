@@ -13,6 +13,9 @@
         <div class="DescriptionField">
             <input type="text" v-model="description">
         </div>
+        <div class="NameField">
+            <input type="text" v-model="name">
+        </div>
         <div class="FilePostButton">
           <button class="glow-on-hover" @click="onUpload">UPLOAD</button>
         </div>
@@ -27,7 +30,8 @@ import axios from 'axios'
     data(){
       return {
         selectedFile: null,
-        description: null
+        description: null,
+        name: null
       }
     }, props:{
       "id": Number
@@ -45,6 +49,7 @@ import axios from 'axios'
         fd.append('id',this.id);
         fd.append('date',date);
         fd.append('description',this.description);
+        fd.append('name',this.name)
         this.selectedFile = null;
         this.description = null;
         

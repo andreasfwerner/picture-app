@@ -1,8 +1,8 @@
 <template>
     <div class="Test">
         <button @click="getPicture()">Get Pic</button>
-        <div class="pic">
-            <TestPicProp ref="childComponent" :pic_src="pic_src"/>
+        <div class="pic" v-for="pic in pics">
+            <TestPicProp ref="childComponent" :pic_src="pic"/>
         </div>
     </div>
 
@@ -27,7 +27,7 @@ import TestPicProp from './TestPicProp.vue'
 
     data(){
         return{
-            pic_src:null
+            pics:[]
         }
     }
     ,
@@ -41,12 +41,17 @@ import TestPicProp from './TestPicProp.vue'
 
             axios.post(path,meta)
             .then((res)=>{
-                
-                const src = `data:image/png;base64,${res.data}`                
-                this.pic_src = src
-                console.log(this.pic_src)
+                console.log(res)
+                for(let i=0; i<res.data.result.length;i++){
+                    const src = `data:image/png;base64,${res.data.result[i]}`
+                    this.pics.push(src)
+                }
                 setTimeout(() => {
-                    this.$refs.childComponent.updateSrc();
+                    for(let i=0; i<this.pics.length;i++){
+                        this.$refs.childComponent[i].updateSrc();
+                        console.log(i)
+                    }
+                    
                 },"500") 
                
             })
