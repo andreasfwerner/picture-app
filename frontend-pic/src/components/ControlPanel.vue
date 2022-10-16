@@ -1,12 +1,12 @@
 <template>
     <div class="ControlPanelDiv">
         <div class="UpDiv">
-            <a>
+            <a @click="arrowUp">
                 <img class="ArrowUp" src="../../svg/arrowdown.svg" />
             </a>
         </div>
         <div class="DownDiv">
-            <a>
+            <a @click="arrowDown">
                 <img class="ArrowDown" src="../../svg/arrowdown.svg" />
             </a>
         </div>
@@ -16,6 +16,31 @@
   <script>
   export default {
     name: 'ControlPanel',
+    props:{
+        pic_len: Number
+    },
+    data(){
+        return{
+            curr:0
+        }
+    }
+    ,
+    methods:{
+        arrowUp(){
+            if (this.curr>0){
+                this.curr--
+                this.$emit('picUp',this.curr)
+            }
+        },
+        arrowDown(){
+            if (this.curr<this.pic_len-1){
+                this.curr++
+                this.$emit('picDown',this.curr)
+            }
+            
+        }
+
+    }
   }
   </script>
   
@@ -34,11 +59,12 @@
             width: 100%;
             height: 30%;
             background-color: black;
+        
         }
-                .ArrowUp{
-
-                }
-
+        a:hover{
+            cursor:grab;
+            
+        }
         .DownDiv{
             width: 100%;
             height: 30%;

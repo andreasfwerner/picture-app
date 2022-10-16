@@ -1,10 +1,10 @@
 <template>
-    <div class="FeedDiv" v-for="pic,i in pics">
+    <div class="FeedDiv" >
         <FeedPicture ref="childComponent"
-                    :date_posted="dates[i]"
-                    :name="names[i]"
-                    :description="descs[i]"
-                    :pic_src="pic"
+                    :date_posted="dates[curr]"
+                    :name="names[curr]"
+                    :description="descs[curr]"
+                    :pic_src="pics[curr]"
                     >
         </FeedPicture>
     </div>
@@ -20,7 +20,8 @@
         FeedPicture,
     },
     props:{
-      "user_id": Number
+      user_id: Number,
+      curr: Number
     }
     ,
     data(){
@@ -28,9 +29,8 @@
             pics:[],
             names:[],
             dates:[],
-            descs:[]
+            descs:[],
         }
-        
     },
     methods:{
         getPicture(){
@@ -42,29 +42,31 @@
 
             axios.post(path,meta)
             .then((res)=>{
-                console.log(res)
                 for(let i=0; i<res.data.pic_list.length;i++){
                     const src = `data:image/png;base64,${res.data.pic_list[i]}`
                     this.pics.push(src)
                     this.descs.push(res.data.desc_list[i])
                     this.names.push(res.data.name_list[i])
                     this.dates.push(res.data.date_list[i])
+                    this.$emit('initPic',this.pics.length)
                 }
                 setTimeout(() => {
-                    for(let i=0; i<this.pics.length;i++){
-                        this.$refs.childComponent[i].updateSrc();
-                        console.log(i)
-                    }
-                    
-                },"500") 
+                        this.$refs.childComponent.updateSrc();
+                },"200") 
                
             })
             .catch((err)=>{
                 console.log(err)
             })
-
-
+        },
+        updatePic(){
+            setTimeout(() => {
+                    this.$refs.childComponent.updateSrc();
+                },"200") 
+            
         }
+        
+
     }
   }
   </script>

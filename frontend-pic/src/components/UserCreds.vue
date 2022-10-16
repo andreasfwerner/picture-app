@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="UserDivFill">
-      <ControlPanel></ControlPanel>
+      <ControlPanel @picDown="picDown" @picUp="picUp" :pic_len="pic_len"></ControlPanel>
     </div>
     </div>
 </template>
@@ -25,12 +25,22 @@
   export default {
     name: 'UserCreds',
     props:{
-      "pic_url":String,
-      "username":String
+      pic_url:String,
+      username:String,
+      pic_len: Number
     },
     components: {
         ControlPanel
     },
+    methods:{
+      picDown(curr){
+        this.$emit('picUp',curr)
+      },
+      picUp(curr){
+        this.$emit('picDown',curr)
+      }
+    }
+    
   }
   </script>
   

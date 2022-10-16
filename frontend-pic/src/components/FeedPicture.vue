@@ -38,12 +38,9 @@
     },
     methods:{
         updateSrc(){
-            console.log(this.pic_src)
             this.$refs.image.src=this.pic_src
         }
     }
-
-
   }
   </script>
   

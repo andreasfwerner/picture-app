@@ -10,9 +10,9 @@
 
     <div class="InnerDiv">
       <FileUpload :id="id"/>
-      <FeedDiv ref="feed" :user_id="id"/>
+      <FeedDiv ref="feed" :user_id="id" @initPic="sendLength" :curr="curr"/>
     </div>
-    <UserCreds :pic_url="pic_url" :username="username" @signedOut="signOut"/>
+    <UserCreds :pic_url="pic_url" :username="username" :pic_len="pic_len" @picUp="picUp" @picDown="picDown" @signedOut="signOut"/>
   </div>
 
 
@@ -45,6 +45,8 @@ export default {
       username: null,
       id: null,
       pic_url: require("../test_data/logo.png"),
+      curr:0,
+      pic_len:0
 
     }
   },
@@ -63,6 +65,17 @@ export default {
       this.loggedIn = null;
       this.username = null;
       this.id = null;
+    },
+    sendLength(l){
+      this.pic_len = l;
+    },
+    picUp(curr){
+      this.curr = curr;
+      this.$refs.feed.updatePic()
+    },
+    picDown(curr){
+      this.curr = curr;
+      this.$refs.feed.updatePic()
     }
   }
 }
